@@ -32,8 +32,26 @@ class _HomePageState extends State<HomePage> {
   final heightSection = 764.0;
   final scrollCtrl = ScrollController();
 
+  late TabController tabController;
+  List<GlobalKey> globalKeyList = [];
+
+  late List<double> itemHeightList;
+
   @override
   void initState() {
+    globalKeyList = List.generate(data.length,
+            (index) => GlobalKey(debugLabel: index.toString()));
+
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      List<RenderBox> renderBoxList = globalKeyList
+          .map((e) => e.currentContext?.findRenderObject() as RenderBox)
+          .toList();
+      itemHeightList = renderBoxList.map((e) => e.size.height).toList();
+    });
+
+
+
     super.initState();
     scrollCtrl.addListener(scrollListener);
   }
